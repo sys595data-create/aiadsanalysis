@@ -1,0 +1,22 @@
+[build]
+builder = "dockerfile"
+
+[[services]]
+name = "backend"
+dockerfile = "backend/Dockerfile"
+
+[services.deploy]
+startCommand = "uvicorn backend.main:app --host 0.0.0.0 --port $PORT --workers 2"
+healthcheckPath = "/health"
+healthcheckTimeout = 30
+restartPolicyType = "on_failure"
+
+[[services]]
+name = "frontend"
+dockerfile = "frontend/Dockerfile"
+
+[services.deploy]
+startCommand = "python frontend/app.py"
+healthcheckPath = "/"
+healthcheckTimeout = 30
+restartPolicyType = "on_failure"
